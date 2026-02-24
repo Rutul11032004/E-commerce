@@ -22,6 +22,16 @@ exports.createProduct=async(req,res)=>{
         
 //     }
 // }
+exports.getProducts=async(req,res)=>{
+    try{
+        const products=await Product.find().populate('categories','name');
+        res.status(200).json(products);
+    }
+    catch(error){
+        console.error("error fetching products:",error.message);
+        res.status(500).json({message:'server error',error:error.message})
+    }
+}
 
 exports.getProductsById=async(req,res)=>{
     try{
@@ -36,19 +46,6 @@ exports.getProductsById=async(req,res)=>{
     }
 }
 
-exports.getProductsById=async(req,res)=>{
-    try{
-        const{id}=req.params
-        const product=await Product.findById(id).populate('categories','name');
-    if(!product){
-        return res.status(404).json({message:"Product not found"})
-    }
-    res.status(200).json(product);
-    }
-    catch(err){
-        res.status(500).json({message:"Error while fetching",error:err.message})
-    }
-}
 
 exports.deleteProductByID=async(req,res)=>{
     try{
